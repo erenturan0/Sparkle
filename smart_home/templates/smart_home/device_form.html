@@ -1,0 +1,97 @@
+{% extends "smart_home/base.html" %}
+
+{% block content %}
+
+<div class="max-w-xl mx-auto">
+    <div class="mb-8">
+        <a href="{% url 'smart_home:devices' %}"
+            class="text-sm text-gray-500 hover:text-accent-light transition-colors mb-3 inline-flex items-center gap-1">
+            <i class="fas fa-arrow-left text-xs"></i>Cihazlara D&ouml;n
+        </a>
+        <h1 class="text-2xl font-bold">
+            {% if editing %}
+            <i class="fas fa-pen text-accent mr-2"></i>Cihaz D&uuml;zenle
+            {% else %}
+            <i class="fas fa-plus text-accent mr-2"></i>Yeni Cihaz Ekle
+            {% endif %}
+        </h1>
+    </div>
+
+    {% if errors %}
+    <div class="mb-6 space-y-2">
+        {% for err in errors %}
+        <div class="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+            <i class="fas fa-exclamation-circle flex-shrink-0"></i>
+            <span>{{ err }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="auth-card">
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Cihaz Ad&inodot;</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-tag auth-input-icon"></i>
+                    <input type="text" name="name" required class="auth-input" placeholder="&Ouml;rn: Salon Lambas&inodot;"
+                        value="{{ form_data.name|default:'' }}">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">IP Adresi</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-network-wired auth-input-icon"></i>
+                    <input type="text" name="ip_address" required class="auth-input" placeholder="192.168.1.100"
+                        value="{{ form_data.ip_address|default:'' }}">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Oda</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-door-open auth-input-icon"></i>
+                        <select name="room" class="auth-input !appearance-none">
+                            {% for val, lbl in rooms %}
+                            <option value="{{ val }}" {% if form_data.room == val %}selected{% endif %}>{{ lbl }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Cihaz Tipi</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-microchip auth-input-icon"></i>
+                        <select name="device_type" class="auth-input !appearance-none">
+                            {% for val, lbl in device_types %}
+                            <option value="{{ val }}" {% if form_data.device_type == val %}selected{% endif %}>{{ lbl }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" name="is_active" value="1" class="w-4 h-4 rounded accent-accent"
+                        {% if form_data.is_active == None or form_data.is_active %}checked{% endif %}>
+                    <span class="text-sm text-gray-300">Cihaz aktif (sisteme dahil)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                {% if editing %}
+                <i class="fas fa-save mr-2"></i>Kaydet
+                {% else %}
+                <i class="fas fa-plus mr-2"></i>Ekle
+                {% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

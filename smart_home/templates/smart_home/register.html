@@ -1,0 +1,93 @@
+{% extends "smart_home/base.html" %}
+
+{% block content %}
+<div class="min-h-[75vh] flex items-center justify-center">
+    <div class="w-full max-w-md">
+
+        <!-- ── Auth Card ── -->
+        <div class="auth-card">
+            <!-- Logo & Başlık -->
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-success mb-4 shadow-lg shadow-accent/20">
+                    <i class="fas fa-user-plus text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold mb-1">Hesap Oluştur</h1>
+                <p class="text-gray-500 text-sm">Sparkle akıllı ev sistemine katıl</p>
+            </div>
+
+            <!-- Hata Mesajları -->
+            {% if errors %}
+            <div class="mb-6 space-y-2">
+                {% for err in errors %}
+                <div
+                    class="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                    <i class="fas fa-exclamation-circle flex-shrink-0"></i>
+                    <span>{{ err }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Form -->
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Kullanıcı
+                        Adı</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-user auth-input-icon"></i>
+                        <input type="text" name="username" required autofocus class="auth-input"
+                            placeholder="kullanici_adi" value="{{ form_data.username|default:'' }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">E-posta</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-envelope auth-input-icon"></i>
+                        <input type="email" name="email" required class="auth-input" placeholder="ornek@email.com"
+                            value="{{ form_data.email|default:'' }}">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Şifre</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-lock auth-input-icon"></i>
+                        <input type="password" name="password1" required class="auth-input"
+                            placeholder="En az 8 karakter">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">Şifre
+                        Tekrar</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-shield-alt auth-input-icon"></i>
+                        <input type="password" name="password2" required class="auth-input"
+                            placeholder="Şifreyi tekrar gir">
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn">
+                    <i class="fas fa-user-plus mr-2"></i>Kayıt Ol
+                </button>
+            </form>
+
+            <!-- Alt Link -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-500 text-sm">
+                    Zaten hesabın var mı?
+                    <a href="{% url 'smart_home:login' %}"
+                        class="text-accent-light font-medium hover:text-accent transition-colors">
+                        Giriş Yap
+                    </a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

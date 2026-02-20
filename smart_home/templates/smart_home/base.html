@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparkle — Akıllı Ev</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0f0f1a',
+                            800: '#161625',
+                            700: '#1e1e32',
+                            600: '#2a2a40',
+                        },
+                        accent: {
+                            DEFAULT: '#6c5ce7',
+                            light: '#a29bfe',
+                        },
+                        success: '#00cec9',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #161625 50%, #1a1a2e 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            backdrop-filter: blur(20px);
+            background: rgba(22, 22, 37, 0.75);
+            border-bottom: 1px solid rgba(108, 92, 231, 0.15);
+        }
+
+        .nav-brand {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* ── Toggle Switch ── */
+        .toggle-switch {
+            width: 56px;
+            height: 30px;
+            background: #2a2a40;
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.4s cubic-bezier(.4, 0, .2, 1);
+            border: 2px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #6c5ce7, #00cec9);
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .toggle-knob {
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.4s cubic-bezier(.4, 0, .2, 1), box-shadow 0.4s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(26px);
+            box-shadow: 0 2px 12px rgba(108, 92, 231, 0.5);
+        }
+
+        /* ── Device Card ── */
+        .device-card {
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(108, 92, 231, 0.1);
+            border-radius: 20px;
+            padding: 1.75rem;
+            transition: all 0.4s cubic-bezier(.4, 0, .2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(108, 92, 231, 0.08), transparent 60%);
+            pointer-events: none;
+        }
+
+        .device-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(108, 92, 231, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(108, 92, 231, 0.1);
+        }
+
+        .device-card.on {
+            border-color: rgba(0, 206, 201, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 206, 201, 0.08);
+        }
+
+        .device-card.on .device-icon {
+            color: #00cec9;
+            text-shadow: 0 0 20px rgba(0, 206, 201, 0.5);
+        }
+
+        .device-icon {
+            font-size: 2rem;
+            color: #4a5568;
+            transition: all 0.4s;
+        }
+
+        /* ── Status Badge ── */
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge.on {
+            background: rgba(0, 206, 201, 0.15);
+            color: #00cec9;
+        }
+
+        .status-badge.off {
+            background: rgba(74, 85, 104, 0.3);
+            color: #718096;
+        }
+
+        /* ── Stat Card ── */
+        .stat-card {
+            background: rgba(30, 30, 50, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(108, 92, 231, 0.1);
+            border-radius: 16px;
+            padding: 1.25rem;
+        }
+
+        /* ── Mobile menu ── */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .mobile-menu.open {
+            max-height: 200px;
+        }
+
+        /* ── Pulse animation ── */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(0, 206, 201, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(0, 206, 201, 0.4);
+            }
+        }
+
+        .device-card.on .toggle-switch {
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* ── Toast Bildirimi ── */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            max-width: 90vw;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .toast-info {
+            background: rgba(0, 206, 201, 0.2);
+            color: #00cec9;
+            border: 1px solid rgba(0, 206, 201, 0.3);
+        }
+
+        /* ── Toggle Loading ── */
+        .toggle-switch.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .toggle-switch.loading .toggle-knob {
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Auth Form Styles ── */
+        .auth-card {
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(108, 92, 231, 0.12);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(108, 92, 231, 0.06), transparent 50%);
+            pointer-events: none;
+        }
+
+        .auth-input-wrapper {
+            position: relative;
+        }
+
+        .auth-input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a5568;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background: rgba(15, 15, 26, 0.6);
+            border: 1px solid rgba(108, 92, 231, 0.15);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .auth-input::placeholder {
+            color: #4a5568;
+        }
+
+        .auth-input:focus {
+            border-color: rgba(108, 92, 231, 0.5);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        .auth-input:focus+.auth-input-icon,
+        .auth-input-wrapper:focus-within .auth-input-icon {
+            color: #6c5ce7;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #6c5ce7, #5a4bd1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.35);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════ NAVBAR ═══════════ -->
+    <nav class="navbar sticky top-0 z-50 px-4 sm:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand -->
+            <a href="/" class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-success flex items-center justify-center shadow-lg">
+                    <i class="fas fa-bolt text-white text-lg"></i>
+                </div>
+                <span class="nav-brand text-2xl font-bold tracking-tight">Sparkle</span>
+            </a>
+
+            {% if user.is_authenticated %}
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="{% url 'smart_home:dashboard' %}"
+                    class="nav-link {% if active_nav == 'dashboard' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'dashboard' %}300{% else %}500{% endif %} hover:text-white">
+                    <i class="fas fa-th-large mr-1.5"></i>Dashboard
+                </a>
+                <a href="{% url 'smart_home:devices' %}"
+                    class="nav-link {% if active_nav == 'devices' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'devices' %}300{% else %}500{% endif %} hover:text-white">
+                    <i class="fas fa-sliders-h mr-1.5"></i>Cihazlar
+                </a>
+                <a href="{% url 'smart_home:settings' %}"
+                    class="nav-link {% if active_nav == 'settings' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'settings' %}300{% else %}500{% endif %} hover:text-white">
+                    <i class="fas fa-gear mr-1.5"></i>Ayarlar
+                </a>
+
+                <!-- User Badge & Logout -->
+                <div class="flex items-center gap-3 ml-4 pl-4 border-l border-gray-700/50">
+                    <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                        <i class="fas fa-user text-accent-light text-xs"></i>
+                    </div>
+                    <span class="text-sm text-gray-400 font-medium">{{ user.username }}</span>
+                    <a href="{% url 'smart_home:logout' %}"
+                        class="text-gray-500 hover:text-red-400 transition-colors text-sm ml-1" title="Çıkış Yap">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobileMenuBtn" class="md:hidden text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu md:hidden mt-4">
+            <div class="flex flex-col gap-3 pb-4">
+                <a href="{% url 'smart_home:dashboard' %}"
+                    class="text-sm font-medium text-gray-300 hover:text-white px-2 py-1.5"><i
+                        class="fas fa-th-large mr-2"></i>Dashboard</a>
+                <a href="{% url 'smart_home:devices' %}"
+                    class="text-sm font-medium text-gray-500 hover:text-white px-2 py-1.5"><i
+                        class="fas fa-sliders-h mr-2"></i>Cihazlar</a>
+                <a href="{% url 'smart_home:settings' %}"
+                    class="text-sm font-medium text-gray-500 hover:text-white px-2 py-1.5"><i
+                        class="fas fa-gear mr-2"></i>Ayarlar</a>
+                <div class="border-t border-gray-700/50 pt-3 mt-1 flex items-center justify-between px-2">
+                    <span class="text-sm text-gray-400"><i class="fas fa-user mr-2"></i>{{ user.username }}</span>
+                    <a href="{% url 'smart_home:logout' %}" class="text-sm text-red-400 hover:text-red-300">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Çıkış
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </nav>
+
+    <!-- ═══════════ CONTENT ═══════════ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="text-center text-gray-600 text-xs py-8 border-t border-gray-800/50">
+        <p>Sparkle Smart Home &copy; 2026 — Powered by Django</p>
+    </footer>
+
+    <!-- Mobile Menu JS -->
+    <script>
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('open');
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
