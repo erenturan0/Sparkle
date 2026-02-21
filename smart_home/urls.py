@@ -23,6 +23,11 @@ urlpatterns = [
     path('settings/profile/', views.settings_profile, name='settings_profile'),
     path('settings/password/', views.settings_password, name='settings_password'),
 
+    # Share Requests
+    path('requests/', views.share_requests, name='share_requests'),
+    path('requests/<int:request_id>/approve/', views.share_request_approve, name='share_request_approve'),
+    path('requests/<int:request_id>/reject/', views.share_request_reject, name='share_request_reject'),
+
     # API
     path('api/toggle/<int:device_id>/', views.api_toggle, name='api_toggle'),
 ]

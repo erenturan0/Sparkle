@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'smart_home.context_processors.pending_requests',
             ],
         },
     },
@@ -127,3 +128,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth
 LOGIN_URL = '/login/'
+
+# Tunnel CSRF
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.lhr.life',
+    'https://*.localhost.run',
+    'https://*.pinggy.link',
+]

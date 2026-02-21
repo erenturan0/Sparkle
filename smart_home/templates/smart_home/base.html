@@ -403,6 +403,15 @@
 
                 <!-- User Badge & Logout -->
                 <div class="flex items-center gap-3 ml-4 pl-4 border-l border-gray-700/50">
+                    <!-- Bildirim Çanı -->
+                    <a href="{% url 'smart_home:share_requests' %}"
+                        class="relative text-gray-400 hover:text-accent-light transition-colors"
+                        title="Paylaşım İstekleri">
+                        <i class="fas fa-bell text-sm"></i>
+                        {% if pending_request_count > 0 %}
+                        <span class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px] animate-pulse">{{ pending_request_count }}</span>
+                        {% endif %}
+                    </a>
                     <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
                         <i class="fas fa-user text-accent-light text-xs"></i>
                     </div>
@@ -436,9 +445,18 @@
                         class="fas fa-gear mr-2"></i>Ayarlar</a>
                 <div class="border-t border-gray-700/50 pt-3 mt-1 flex items-center justify-between px-2">
                     <span class="text-sm text-gray-400"><i class="fas fa-user mr-2"></i>{{ user.username }}</span>
-                    <a href="{% url 'smart_home:logout' %}" class="text-sm text-red-400 hover:text-red-300">
-                        <i class="fas fa-sign-out-alt mr-1"></i>Çıkış
-                    </a>
+                    <div class="flex items-center gap-3">
+                        <a href="{% url 'smart_home:share_requests' %}"
+                            class="relative text-gray-400 hover:text-accent-light transition-colors">
+                            <i class="fas fa-bell text-sm"></i>
+                            {% if pending_request_count > 0 %}
+                            <span class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px]">{{ pending_request_count }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'smart_home:logout' %}" class="text-sm text-red-400 hover:text-red-300">
+                            <i class="fas fa-sign-out-alt mr-1"></i>Çıkış
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

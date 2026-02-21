@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 
-from .models import SmartDevice
+from .models import SmartDevice, DeviceShareRequest
 from .services import tasmota
 
 
@@ -101,7 +101,7 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     """Ana sayfa — Akıllı Ev Dashboard."""
-    devices = SmartDevice.objects.filter(is_active=True)
+    devices = SmartDevice.objects.filter(owner=request.user, is_active=True)
 
     total = devices.count()
     rooms = devices.values("room").distinct().count()
@@ -124,7 +124,7 @@ def dashboard(request):
 @login_required
 def devices_list(request):
     """Cihaz listesi sayfası."""
-    devices = SmartDevice.objects.all()
+    devices = SmartDevice.objects.filter(owner=request.user)
     return render(request, "smart_home/devices.html", {
         "devices": devices,
         "active_nav": "devices",
@@ -149,7 +149,7 @@ def device_add(request):
 @login_required
 def device_edit(request, device_id):
     """Cihaz düzenleme."""
-    device = get_object_or_404(SmartDevice, pk=device_id)
+    device = get_object_or_404(SmartDevice, pk=device_id, owner=request.user)
 
     if request.method == "POST":
         return _save_device(request, device)
@@ -185,11 +185,34 @@ def _save_device(request, device=None):
         errors.append("IP adresi boş bırakılamaz.")
     else:
         # Aynı IP'ye sahip başka cihaz var mı?
-        ip_query = SmartDevice.objects.filter(ip_address=ip_address)
+        own_query = SmartDevice.objects.filter(ip_address=ip_address, owner=request.user)
         if device:
-            ip_query = ip_query.exclude(pk=device.pk)
-        if ip_query.exists():
-            errors.append("Bu IP adresi başka bir cihaz tarafından kullanılıyor.")
+            own_query = own_query.exclude(pk=device.pk)
+        if own_query.exists():
+            errors.append("Bu IP adresini zaten kullanıyorsun.")
+        elif not errors:
+            # Başka kullanıcıda var mı? → onay isteği gönder
+            other_device = SmartDevice.objects.filter(ip_address=ip_address).exclude(owner=request.user).first()
+            if other_device and device is None:
+                # Zaten bekleyen istek var mı kontrol et
+                existing = DeviceShareRequest.objects.filter(
+                    requester=request.user,
+                    ip_address=ip_address,
+                    status=DeviceShareRequest.Status.PENDING,
+                ).exists()
+                if existing:
+                    messages.info(request, "Bu IP için zaten bekleyen bir onay isteğiniz var.")
+                    return redirect("smart_home:devices")
+                DeviceShareRequest.objects.create(
+                    requester=request.user,
+                    owner=other_device.owner,
+                    ip_address=ip_address,
+                    device_name=name,
+                    room=room,
+                    device_type=device_type,
+                )
+                messages.success(request, f"\"{name}\" için cihaz sahibine onay isteği gönderildi.")
+                return redirect("smart_home:devices")
 
     form_data = {
         "name": name,
@@ -210,7 +233,7 @@ def _save_device(request, device=None):
         })
 
     if device is None:
-        device = SmartDevice()
+        device = SmartDevice(owner=request.user)
 
     device.name = name
     device.ip_address = ip_address
@@ -227,7 +250,7 @@ def _save_device(request, device=None):
 @require_POST
 def device_delete(request, device_id):
     """Cihaz silme."""
-    device = get_object_or_404(SmartDevice, pk=device_id)
+    device = get_object_or_404(SmartDevice, pk=device_id, owner=request.user)
     device_name = device.name
     device.delete()
     messages.success(request, f"\"{device_name}\" silindi.")
@@ -321,7 +344,7 @@ def settings_password(request):
 @require_POST
 def api_toggle(request, device_id):
     """Tasmota cihaz toggle API endpoint'i."""
-    device = get_object_or_404(SmartDevice, pk=device_id, is_active=True)
+    device = get_object_or_404(SmartDevice, pk=device_id, owner=request.user, is_active=True)
 
     result = tasmota.toggle(device.ip_address)
 
@@ -337,3 +360,78 @@ def api_toggle(request, device_id):
     device.save(update_fields=["last_seen"])
 
     return JsonResponse({"ok": True, "power": power})
+
+
+# ═══════════════════════════════════════════════════════════
+#  SHARE REQUESTS
+# ═══════════════════════════════════════════════════════════
+
+@login_required
+def share_requests(request):
+    """Gelen cihaz paylaşım istekleri."""
+    pending = DeviceShareRequest.objects.filter(
+        owner=request.user,
+        status=DeviceShareRequest.Status.PENDING,
+    )
+    resolved = DeviceShareRequest.objects.filter(
+        owner=request.user,
+    ).exclude(status=DeviceShareRequest.Status.PENDING)[:20]
+
+    # Kullanıcının gönderdiği istekler
+    sent = DeviceShareRequest.objects.filter(
+        requester=request.user,
+    ).order_by('-created_at')[:20]
+
+    return render(request, "smart_home/share_requests.html", {
+        "pending_requests": pending,
+        "resolved_requests": resolved,
+        "sent_requests": sent,
+        "active_nav": "requests",
+    })
+
+
+@login_required
+@require_POST
+def share_request_approve(request, request_id):
+    """Paylaşım isteğini onayla ve cihazı oluştur."""
+    share_req = get_object_or_404(
+        DeviceShareRequest,
+        pk=request_id,
+        owner=request.user,
+        status=DeviceShareRequest.Status.PENDING,
+    )
+
+    # Cihazı requester adına oluştur
+    SmartDevice.objects.create(
+        owner=share_req.requester,
+        name=share_req.device_name,
+        ip_address=share_req.ip_address,
+        room=share_req.room,
+        device_type=share_req.device_type,
+    )
+
+    share_req.status = DeviceShareRequest.Status.APPROVED
+    share_req.resolved_at = timezone.now()
+    share_req.save()
+
+    messages.success(request, f"\"{share_req.device_name}\" isteği onaylandı. Cihaz {share_req.requester.username} kullanıcısına eklendi.")
+    return redirect("smart_home:share_requests")
+
+
+@login_required
+@require_POST
+def share_request_reject(request, request_id):
+    """Paylaşım isteğini reddet."""
+    share_req = get_object_or_404(
+        DeviceShareRequest,
+        pk=request_id,
+        owner=request.user,
+        status=DeviceShareRequest.Status.PENDING,
+    )
+
+    share_req.status = DeviceShareRequest.Status.REJECTED
+    share_req.resolved_at = timezone.now()
+    share_req.save()
+
+    messages.success(request, f"\"{share_req.device_name}\" isteği reddedildi.")
+    return redirect("smart_home:share_requests")
