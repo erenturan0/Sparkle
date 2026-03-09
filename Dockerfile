@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Create staticfiles directory and collect static files
 RUN mkdir -p staticfiles
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY="dummy-key-for-build" python manage.py collectstatic --noinput
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
