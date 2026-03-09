@@ -22,3 +22,6 @@ db.sqlite3
 # OS
 .DS_Store
 Thumbs.db
+
+# Django Static Files
+staticfiles/
