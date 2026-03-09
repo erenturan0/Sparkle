@@ -30,7 +30,7 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env('SECRET_KEY', default='unsafe-build-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # TEMP: hata tespiti için, sonra kaldır
+DEBUG = env('DEBUG', default=False)
 
 ALLOWED_HOSTS = [
     'www.sparkleblog.app',
