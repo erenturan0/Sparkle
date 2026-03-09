@@ -102,18 +102,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Cloud SQL Unix socket bağlantısı (Cloud Run) veya TCP bağlantısı (lokal)
-CLOUD_SQL_CONNECTION = env('CLOUD_SQL_CONNECTION', default='')
+# Ayrı ortam değişkenleri varsa onları kullan (URL parse sorunundan kaçınır)
+DB_HOST = env('DB_HOST', default='')
 
-if CLOUD_SQL_CONNECTION:
-    # Cloud Run: Unix socket üzerinden Cloud SQL
+if DB_HOST:
+    # Cloud Run veya production: ayrı değişkenlerle TCP/socket bağlantısı
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': env('DB_NAME', default='postgres'),
             'USER': env('DB_USER', default='postgres'),
             'PASSWORD': env('DB_PASSWORD', default=''),
-            'HOST': f'/cloudsql/{CLOUD_SQL_CONNECTION}',
+            'HOST': DB_HOST,
+            'PORT': env('DB_PORT', default='5432'),
+            'OPTIONS': {
+                'connect_timeout': 5,
+            },
         }
     }
 else:
@@ -121,7 +125,6 @@ else:
     DATABASES = {
         'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3'),
     }
-    # Postgres bağlantı timeout
     if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         DATABASES['default'].setdefault('OPTIONS', {})
         DATABASES['default']['OPTIONS']['connect_timeout'] = 5
