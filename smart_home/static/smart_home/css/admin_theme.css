@@ -1,0 +1,134 @@
+/* ── Theme Toggle Button ── */
+#sparkle-theme-toggle {
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+#sparkle-theme-toggle:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+[data-bs-theme="light"] #sparkle-theme-toggle {
+    color: #4a5568;
+}
+
+[data-bs-theme="light"] #sparkle-theme-toggle:hover {
+    color: #1a202c;
+}
+
+/* ── Light Mode Navbar Fixes ── */
+[data-bs-theme="light"] .main-header.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-bs-theme="light"] .main-header .navbar-nav .nav-link,
+[data-bs-theme="light"] .main-header .navbar-nav .nav-item {
+    color: #4a5568 !important;
+}
+
+[data-bs-theme="light"] .main-header .navbar-nav .nav-link:hover {
+    color: #1a202c !important;
+}
+
+[data-bs-theme="light"] .main-header .form-control {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+[data-bs-theme="light"] .main-header .btn-navbar {
+    color: #4a5568;
+}
+
+/* ── Custom Sparkle Buttons ── */
+
+/* Primary Button (Purple Gradient) */
+.btn-sparkle-primary {
+    background: linear-gradient(135deg, #6c5ce7, #5a4bd1);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-sparkle-primary:hover,
+.btn-sparkle-primary:focus,
+.btn-sparkle-primary:active {
+    background: linear-gradient(135deg, #5a4bd1, #4834d4);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Success Button (Teal Gradient) */
+.btn-sparkle-success {
+    background: linear-gradient(135deg, #00cec9, #00b894);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 206, 201, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-sparkle-success:hover,
+.btn-sparkle-success:focus,
+.btn-sparkle-success:active {
+    background: linear-gradient(135deg, #00b894, #00a884);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 206, 201, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Override default Bootstrap btn-info and btn-success globally in admin */
+.btn-info,
+.btn-success {
+    background-color: #00cec9 !important;
+    border-color: #00cec9 !important;
+    color: #ffffff !important;
+}
+
+.btn-info:hover,
+.btn-success:hover {
+    background-color: #00b894 !important;
+    border-color: #00b894 !important;
+}
+
+.btn-primary {
+    background-color: #6c5ce7 !important;
+    border-color: #6c5ce7 !important;
+}
+
+.btn-primary:hover {
+    background-color: #5a4bd1 !important;
+    border-color: #5a4bd1 !important;
+}
+
+/* Outline Buttons (often used in Jazzmin list views) */
+.btn-outline-info,
+.btn-outline-success {
+    color: #00cec9 !important;
+    border-color: #00cec9 !important;
+}
+
+.btn-outline-info:hover,
+.btn-outline-success:hover {
+    background-color: #00cec9 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-primary {
+    color: #6c5ce7 !important;
+    border-color: #6c5ce7 !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: #6c5ce7 !important;
+    color: #ffffff !important;
+}

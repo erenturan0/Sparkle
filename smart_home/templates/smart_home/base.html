@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8">
@@ -42,7 +42,83 @@
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Tema başlatma — FOUC önleme -->
+    <script>
+            (function () {
+                const saved = localStorage.getItem('sparkle-theme');
+                if (saved === 'light') {
+                    document.documentElement.classList.add('light-mode');
+                }
+            })();
+    </script>
+
     <style>
+        /* ══════════ TEMA DEĞİŞKENLERİ ══════════ */
+        :root {
+            /* Gece (varsayılan) */
+            --bg-gradient-1: #0f0f1a;
+            --bg-gradient-2: #161625;
+            --bg-gradient-3: #1a1a2e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --text-muted: #718096;
+            --text-faint: #4a5568;
+
+            --navbar-bg: rgba(22, 22, 37, 0.85);
+            --navbar-border: rgba(108, 92, 231, 0.15);
+
+            --card-bg: rgba(30, 30, 50, 0.6);
+            --card-border: rgba(108, 92, 231, 0.1);
+            --card-glow: rgba(108, 92, 231, 0.08);
+            --card-hover-shadow: rgba(0, 0, 0, 0.3);
+
+            --input-bg: rgba(15, 15, 26, 0.6);
+            --input-border: rgba(108, 92, 231, 0.15);
+
+            --toggle-bg: #2a2a40;
+            --toggle-border: rgba(108, 92, 231, 0.2);
+
+            --badge-off-bg: rgba(74, 85, 104, 0.3);
+            --badge-off-color: #718096;
+
+            --divider: rgba(74, 85, 104, 0.3);
+            --footer-border: rgba(74, 85, 104, 0.2);
+
+            --shadow-strength: 0.3;
+        }
+
+        .light-mode {
+            --bg-gradient-1: #f0f2f5;
+            --bg-gradient-2: #e8ebf0;
+            --bg-gradient-3: #f5f6fa;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-faint: #a0aec0;
+
+            --navbar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-border: rgba(108, 92, 231, 0.12);
+
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(108, 92, 231, 0.12);
+            --card-glow: rgba(108, 92, 231, 0.04);
+            --card-hover-shadow: rgba(108, 92, 231, 0.08);
+
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(108, 92, 231, 0.2);
+
+            --toggle-bg: #e2e8f0;
+            --toggle-border: rgba(108, 92, 231, 0.15);
+
+            --badge-off-bg: rgba(113, 128, 150, 0.15);
+            --badge-off-color: #718096;
+
+            --divider: rgba(108, 92, 231, 0.1);
+            --footer-border: rgba(0, 0, 0, 0.06);
+
+            --shadow-strength: 0.08;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -51,16 +127,18 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0f1a 0%, #161625 50%, #1a1a2e 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
             min-height: 100vh;
-            color: #e2e8f0;
+            color: var(--text-primary);
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         /* ── Navbar ── */
         .navbar {
             backdrop-filter: blur(20px);
-            background: rgba(22, 22, 37, 0.75);
-            border-bottom: 1px solid rgba(108, 92, 231, 0.15);
+            background: var(--navbar-bg);
+            border-bottom: 1px solid var(--navbar-border);
+            transition: background 0.4s, border-color 0.4s;
         }
 
         .nav-brand {
@@ -73,6 +151,15 @@
         .nav-link {
             position: relative;
             transition: color 0.3s;
+            color: var(--text-muted);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            color: var(--text-secondary);
         }
 
         .nav-link::after {
@@ -92,16 +179,38 @@
             width: 100%;
         }
 
+        /* ── Theme Toggle Button ── */
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: #6c5ce7;
+            color: #6c5ce7;
+            transform: scale(1.05);
+        }
+
         /* ── Toggle Switch ── */
         .toggle-switch {
             width: 56px;
             height: 30px;
-            background: #2a2a40;
+            background: var(--toggle-bg);
             border-radius: 999px;
             position: relative;
             cursor: pointer;
             transition: background 0.4s cubic-bezier(.4, 0, .2, 1);
-            border: 2px solid rgba(108, 92, 231, 0.2);
+            border: 2px solid var(--toggle-border);
         }
 
         .toggle-switch.active {
@@ -129,9 +238,9 @@
 
         /* ── Device Card ── */
         .device-card {
-            background: rgba(30, 30, 50, 0.6);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 1.75rem;
             transition: all 0.4s cubic-bezier(.4, 0, .2, 1);
@@ -146,19 +255,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 30%, rgba(108, 92, 231, 0.08), transparent 60%);
+            background: radial-gradient(circle at 30% 30%, var(--card-glow), transparent 60%);
             pointer-events: none;
         }
 
         .device-card:hover {
             transform: translateY(-4px);
             border-color: rgba(108, 92, 231, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(108, 92, 231, 0.1);
+            box-shadow: 0 12px 40px var(--card-hover-shadow), 0 0 30px rgba(108, 92, 231, 0.1);
         }
 
         .device-card.on {
             border-color: rgba(0, 206, 201, 0.3);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 206, 201, 0.08);
+            box-shadow: 0 12px 40px var(--card-hover-shadow), 0 0 30px rgba(0, 206, 201, 0.08);
         }
 
         .device-card.on .device-icon {
@@ -168,7 +277,7 @@
 
         .device-icon {
             font-size: 2rem;
-            color: #4a5568;
+            color: var(--text-faint);
             transition: all 0.4s;
         }
 
@@ -188,17 +297,18 @@
         }
 
         .status-badge.off {
-            background: rgba(74, 85, 104, 0.3);
-            color: #718096;
+            background: var(--badge-off-bg);
+            color: var(--badge-off-color);
         }
 
         /* ── Stat Card ── */
         .stat-card {
-            background: rgba(30, 30, 50, 0.5);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(108, 92, 231, 0.1);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 1.25rem;
+            transition: background 0.4s, border-color 0.4s;
         }
 
         /* ── Mobile menu ── */
@@ -209,7 +319,7 @@
         }
 
         .mobile-menu.open {
-            max-height: 200px;
+            max-height: 300px;
         }
 
         /* ── Pulse animation ── */
@@ -259,10 +369,22 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
+        .light-mode .toast-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
         .toast-info {
             background: rgba(0, 206, 201, 0.2);
             color: #00cec9;
             border: 1px solid rgba(0, 206, 201, 0.3);
+        }
+
+        .light-mode .toast-info {
+            background: rgba(0, 206, 201, 0.1);
+            color: #0d9488;
+            border: 1px solid rgba(0, 206, 201, 0.2);
         }
 
         /* ── Toggle Loading ── */
@@ -283,13 +405,14 @@
 
         /* ── Auth Form Styles ── */
         .auth-card {
-            background: rgba(30, 30, 50, 0.6);
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(108, 92, 231, 0.12);
+            border: 1px solid var(--card-border);
             border-radius: 24px;
             padding: 2.5rem;
             position: relative;
             overflow: hidden;
+            transition: background 0.4s, border-color 0.4s;
         }
 
         .auth-card::before {
@@ -299,7 +422,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle at 30% 20%, rgba(108, 92, 231, 0.06), transparent 50%);
+            background: radial-gradient(circle at 30% 20%, var(--card-glow), transparent 50%);
             pointer-events: none;
         }
 
@@ -312,7 +435,7 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #4a5568;
+            color: var(--text-faint);
             font-size: 0.85rem;
             transition: color 0.3s;
         }
@@ -320,10 +443,10 @@
         .auth-input {
             width: 100%;
             padding: 12px 14px 12px 42px;
-            background: rgba(15, 15, 26, 0.6);
-            border: 1px solid rgba(108, 92, 231, 0.15);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 12px;
-            color: #e2e8f0;
+            color: var(--text-primary);
             font-size: 0.9rem;
             font-family: 'Inter', sans-serif;
             transition: all 0.3s;
@@ -331,7 +454,7 @@
         }
 
         .auth-input::placeholder {
-            color: #4a5568;
+            color: var(--text-faint);
         }
 
         .auth-input:focus {
@@ -368,6 +491,47 @@
         .auth-btn:active {
             transform: translateY(0);
         }
+
+        /* ── Light Mode Tailwind Overrides ── */
+        .light-mode .text-gray-300 {
+            color: #2d3748 !important;
+        }
+
+        .light-mode .text-gray-400 {
+            color: #4a5568 !important;
+        }
+
+        .light-mode .text-gray-500 {
+            color: #718096 !important;
+        }
+
+        .light-mode .text-gray-600 {
+            color: #a0aec0 !important;
+        }
+
+        .light-mode .hover\:text-white:hover {
+            color: #1a202c !important;
+        }
+
+        .light-mode .border-gray-700\/50 {
+            border-color: rgba(108, 92, 231, 0.1) !important;
+        }
+
+        .light-mode .border-gray-800\/50 {
+            border-color: rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .light-mode .bg-dark-700 {
+            background: rgba(108, 92, 231, 0.08) !important;
+        }
+
+        /* ── Geçiş animasyonu ── */
+        .theme-transition,
+        .theme-transition *,
+        .theme-transition *::before,
+        .theme-transition *::after {
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+        }
     </style>
 </head>
 
@@ -389,44 +553,59 @@
             <!-- Desktop Links -->
             <div class="hidden md:flex items-center gap-8">
                 <a href="{% url 'smart_home:dashboard' %}"
-                    class="nav-link {% if active_nav == 'dashboard' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'dashboard' %}300{% else %}500{% endif %} hover:text-white">
+                    class="nav-link {% if active_nav == 'dashboard' %}active{% endif %} text-sm font-medium">
                     <i class="fas fa-th-large mr-1.5"></i>Dashboard
                 </a>
                 <a href="{% url 'smart_home:devices' %}"
-                    class="nav-link {% if active_nav == 'devices' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'devices' %}300{% else %}500{% endif %} hover:text-white">
+                    class="nav-link {% if active_nav == 'devices' %}active{% endif %} text-sm font-medium">
                     <i class="fas fa-sliders-h mr-1.5"></i>Cihazlar
                 </a>
                 <a href="{% url 'smart_home:settings' %}"
-                    class="nav-link {% if active_nav == 'settings' %}active{% endif %} text-sm font-medium text-gray-{% if active_nav == 'settings' %}300{% else %}500{% endif %} hover:text-white">
+                    class="nav-link {% if active_nav == 'settings' %}active{% endif %} text-sm font-medium">
                     <i class="fas fa-gear mr-1.5"></i>Ayarlar
                 </a>
+                {% if user.is_staff %}
+                <a href="/admin/" class="nav-link text-sm font-medium">
+                    <i class="fas fa-shield-alt mr-1.5"></i>Yönetici
+                </a>
+                {% endif %}
 
                 <!-- User Badge & Logout -->
                 <div class="flex items-center gap-3 ml-4 pl-4 border-l border-gray-700/50">
+                    <!-- Tema Toggle -->
+                    <button class="theme-toggle" id="themeToggleDesktop" title="Tema Değiştir">
+                        <i class="fas fa-sun"></i>
+                    </button>
                     <!-- Bildirim Çanı -->
-                    <a href="{% url 'smart_home:share_requests' %}"
-                        class="relative text-gray-400 hover:text-accent-light transition-colors"
-                        title="Paylaşım İstekleri">
+                    <a href="{% url 'smart_home:share_requests' %}" class="relative transition-colors"
+                        style="color: var(--text-muted);" title="Paylaşım İstekleri">
                         <i class="fas fa-bell text-sm"></i>
                         {% if pending_request_count > 0 %}
-                        <span class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px] animate-pulse">{{ pending_request_count }}</span>
+                        <span
+                            class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px] animate-pulse">{{
+                            pending_request_count }}</span>
                         {% endif %}
                     </a>
                     <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
                         <i class="fas fa-user text-accent-light text-xs"></i>
                     </div>
-                    <span class="text-sm text-gray-400 font-medium">{{ user.username }}</span>
-                    <a href="{% url 'smart_home:logout' %}"
-                        class="text-gray-500 hover:text-red-400 transition-colors text-sm ml-1" title="Çıkış Yap">
+                    <span class="text-sm font-medium" style="color: var(--text-secondary);">{{ user.username }}</span>
+                    <a href="{% url 'smart_home:logout' %}" class="transition-colors text-sm ml-1 hover:text-red-400"
+                        style="color: var(--text-faint);" title="Çıkış Yap">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>
             </div>
 
             <!-- Mobile Toggle -->
-            <button id="mobileMenuBtn" class="md:hidden text-gray-400 hover:text-white transition-colors">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
+            <div class="flex items-center gap-3 md:hidden">
+                <button class="theme-toggle" id="themeToggleMobile" title="Tema Değiştir">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button id="mobileMenuBtn" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
             {% endif %}
         </div>
 
@@ -434,26 +613,30 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="mobile-menu md:hidden mt-4">
             <div class="flex flex-col gap-3 pb-4">
-                <a href="{% url 'smart_home:dashboard' %}"
-                    class="text-sm font-medium text-gray-300 hover:text-white px-2 py-1.5"><i
+                <a href="{% url 'smart_home:dashboard' %}" class="text-sm font-medium px-2 py-1.5 nav-link"><i
                         class="fas fa-th-large mr-2"></i>Dashboard</a>
-                <a href="{% url 'smart_home:devices' %}"
-                    class="text-sm font-medium text-gray-500 hover:text-white px-2 py-1.5"><i
+                <a href="{% url 'smart_home:devices' %}" class="text-sm font-medium px-2 py-1.5 nav-link"><i
                         class="fas fa-sliders-h mr-2"></i>Cihazlar</a>
-                <a href="{% url 'smart_home:settings' %}"
-                    class="text-sm font-medium text-gray-500 hover:text-white px-2 py-1.5"><i
+                <a href="{% url 'smart_home:settings' %}" class="text-sm font-medium px-2 py-1.5 nav-link"><i
                         class="fas fa-gear mr-2"></i>Ayarlar</a>
+                {% if user.is_staff %}
+                <a href="/admin/" class="text-sm font-medium px-2 py-1.5 nav-link"><i
+                        class="fas fa-shield-alt mr-2"></i>Yönetici Paneli</a>
+                {% endif %}
                 <div class="border-t border-gray-700/50 pt-3 mt-1 flex items-center justify-between px-2">
-                    <span class="text-sm text-gray-400"><i class="fas fa-user mr-2"></i>{{ user.username }}</span>
+                    <span class="text-sm font-medium" style="color: var(--text-secondary);"><i
+                            class="fas fa-user mr-2"></i>{{ user.username }}</span>
                     <div class="flex items-center gap-3">
-                        <a href="{% url 'smart_home:share_requests' %}"
-                            class="relative text-gray-400 hover:text-accent-light transition-colors">
+                        <a href="{% url 'smart_home:share_requests' %}" class="relative transition-colors"
+                            style="color: var(--text-muted);">
                             <i class="fas fa-bell text-sm"></i>
                             {% if pending_request_count > 0 %}
-                            <span class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px]">{{ pending_request_count }}</span>
+                            <span
+                                class="absolute -top-2 -right-2 px-1 min-w-[16px] h-[16px] rounded-full bg-red-500 text-white text-[9px] font-bold text-center leading-[16px]">{{
+                                pending_request_count }}</span>
                             {% endif %}
                         </a>
-                        <a href="{% url 'smart_home:logout' %}" class="text-sm text-red-400 hover:text-red-300">
+                        <a href="{% url 'smart_home:logout' %}" class="text-sm text-red-500 hover:text-red-400">
                             <i class="fas fa-sign-out-alt mr-1"></i>Çıkış
                         </a>
                     </div>
@@ -475,9 +658,45 @@
 
     <!-- Mobile Menu JS -->
     <script>
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-            document.getElementById('mobileMenu').classList.toggle('open');
-        });
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.toggle('open');
+            });
+        }
+    </script>
+
+    <!-- Tema Toggle JS -->
+    <script>
+        (function () {
+            const html = document.documentElement;
+            const isLight = () => html.classList.contains('light-mode');
+
+            function updateIcons() {
+                const light = isLight();
+                document.querySelectorAll('.theme-toggle i').forEach(icon => {
+                    icon.className = light ? 'fas fa-moon' : 'fas fa-sun';
+                });
+            }
+
+            function toggleTheme() {
+                html.classList.add('theme-transition');
+                html.classList.toggle('light-mode');
+                const next = isLight() ? 'light' : 'dark';
+                localStorage.setItem('sparkle-theme', next);
+                localStorage.setItem('jazzmin-theme-mode', next);
+                updateIcons();
+                setTimeout(() => html.classList.remove('theme-transition'), 500);
+            }
+
+            // İkonları başlat
+            updateIcons();
+
+            // Tüm toggle butonlarına bağla
+            document.querySelectorAll('.theme-toggle').forEach(btn => {
+                btn.addEventListener('click', toggleTheme);
+            });
+        })();
     </script>
 
     {% block extra_js %}{% endblock %}
