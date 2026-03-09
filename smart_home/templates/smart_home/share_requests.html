@@ -2,7 +2,6 @@
 
 {% block content %}
 
-<!-- ── Sayfa Başlığı ── -->
 <div class="flex items-center justify-between mb-8">
     <div>
         <h1 class="text-3xl sm:text-4xl font-bold mb-2">
@@ -12,7 +11,6 @@
     </div>
 </div>
 
-<!-- ── Başarı / Bilgi Mesajları ── -->
 {% if messages %}
 {% for message in messages %}
 <div class="mb-6 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-sm flex items-center gap-2">
@@ -23,7 +21,6 @@
 {% endif %}
 
 
-<!-- ══════════ BEKLEYEN İSTEKLER ══════════ -->
 {% if pending_requests %}
 <div class="mb-10">
     <h2 class="text-lg font-semibold text-gray-300 mb-4 flex items-center gap-2">
@@ -36,7 +33,6 @@
         {% for req in pending_requests %}
         <div class="device-card !p-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <!-- Sol: Bilgiler -->
                 <div class="flex items-start gap-4">
                     <div class="w-11 h-11 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-user-plus text-yellow-400"></i>
@@ -54,7 +50,6 @@
                     </div>
                 </div>
 
-                <!-- Sağ: Butonlar -->
                 <div class="flex items-center gap-2 flex-shrink-0">
                     <form method="post" action="{% url 'smart_home:share_request_approve' req.id %}">
                         {% csrf_token %}
@@ -79,7 +74,6 @@
 {% endif %}
 
 
-<!-- ══════════ GÖNDERDİĞİM İSTEKLER ══════════ -->
 {% if sent_requests %}
 <div class="mb-10">
     <h2 class="text-lg font-semibold text-gray-300 mb-4 flex items-center gap-2">
@@ -135,7 +129,6 @@
 {% endif %}
 
 
-<!-- ══════════ BOŞ ══════════ -->
 {% if not pending_requests and not sent_requests %}
 <div class="text-center py-16">
     <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-dark-700 mb-6">

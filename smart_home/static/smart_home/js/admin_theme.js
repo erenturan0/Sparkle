@@ -1,8 +1,3 @@
-/**
- * Sparkle Admin — Tema Toggle
- * localStorage'daki sparkle-theme değerini okur ve
- * Jazzmin'in native data-bs-theme yapısını tetikler.
- */
 (function () {
     const html = document.documentElement;
 
@@ -34,10 +29,8 @@
         applyTheme();
     }
 
-    // Başlangıçta uygula
     applyTheme();
 
-    // Toggle butonunu Bootstrap 5 (ms-auto) Navbar'ına ekle
     document.addEventListener('DOMContentLoaded', function () {
         const navRight = document.querySelector('.navbar-nav.ms-auto') ||
             document.querySelector('.navbar-nav.ml-auto') ||
@@ -58,7 +51,6 @@
         }
     });
 
-    // Ana sekmeden (veya iframe vb.) değişimleri yakalamak için
     window.addEventListener('storage', function (e) {
         if (e.key === 'sparkle-theme' || e.key === 'jazzmin-theme-mode') {
             applyTheme();

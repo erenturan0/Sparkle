@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sparkle — Akıllı Ev</title>
 
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -34,15 +33,12 @@
         }
     </script>
 
-    <!-- Google Fonts — Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Tema başlatma — FOUC önleme -->
     <script>
             (function () {
                 const saved = localStorage.getItem('sparkle-theme');
@@ -53,9 +49,7 @@
     </script>
 
     <style>
-        /* ══════════ TEMA DEĞİŞKENLERİ ══════════ */
         :root {
-            /* Gece (varsayılan) */
             --bg-gradient-1: #0f0f1a;
             --bg-gradient-2: #161625;
             --bg-gradient-3: #1a1a2e;
@@ -133,7 +127,6 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
 
-        /* ── Navbar ── */
         .navbar {
             backdrop-filter: blur(20px);
             background: var(--navbar-bg);
@@ -179,7 +172,6 @@
             width: 100%;
         }
 
-        /* ── Theme Toggle Button ── */
         .theme-toggle {
             width: 36px;
             height: 36px;
@@ -201,7 +193,6 @@
             transform: scale(1.05);
         }
 
-        /* ── Toggle Switch ── */
         .toggle-switch {
             width: 56px;
             height: 30px;
@@ -236,7 +227,6 @@
             box-shadow: 0 2px 12px rgba(108, 92, 231, 0.5);
         }
 
-        /* ── Device Card ── */
         .device-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -281,7 +271,6 @@
             transition: all 0.4s;
         }
 
-        /* ── Status Badge ── */
         .status-badge {
             font-size: 0.7rem;
             padding: 4px 10px;
@@ -301,7 +290,6 @@
             color: var(--badge-off-color);
         }
 
-        /* ── Stat Card ── */
         .stat-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -311,7 +299,6 @@
             transition: background 0.4s, border-color 0.4s;
         }
 
-        /* ── Mobile menu ── */
         .mobile-menu {
             max-height: 0;
             overflow: hidden;
@@ -322,7 +309,6 @@
             max-height: 300px;
         }
 
-        /* ── Pulse animation ── */
         @keyframes pulse-glow {
 
             0%,
@@ -339,7 +325,6 @@
             animation: pulse-glow 2s infinite;
         }
 
-        /* ── Toast Bildirimi ── */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -387,7 +372,6 @@
             border: 1px solid rgba(0, 206, 201, 0.2);
         }
 
-        /* ── Toggle Loading ── */
         .toggle-switch.loading {
             opacity: 0.5;
             pointer-events: none;
@@ -403,7 +387,6 @@
             }
         }
 
-        /* ── Auth Form Styles ── */
         .auth-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -492,7 +475,6 @@
             transform: translateY(0);
         }
 
-        /* ── Light Mode Tailwind Overrides ── */
         .light-mode .text-gray-300 {
             color: #2d3748 !important;
         }
@@ -525,7 +507,6 @@
             background: rgba(108, 92, 231, 0.08) !important;
         }
 
-        /* ── Geçiş animasyonu ── */
         .theme-transition,
         .theme-transition *,
         .theme-transition *::before,
@@ -537,10 +518,8 @@
 
 <body>
 
-    <!-- ═══════════ NAVBAR ═══════════ -->
     <nav class="navbar sticky top-0 z-50 px-4 sm:px-8 py-4">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <!-- Brand -->
             <a href="/" class="flex items-center gap-3">
                 <div
                     class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-success flex items-center justify-center shadow-lg">
@@ -550,7 +529,6 @@
             </a>
 
             {% if user.is_authenticated %}
-            <!-- Desktop Links -->
             <div class="hidden md:flex items-center gap-8">
                 <a href="{% url 'smart_home:dashboard' %}"
                     class="nav-link {% if active_nav == 'dashboard' %}active{% endif %} text-sm font-medium">
@@ -570,13 +548,10 @@
                 </a>
                 {% endif %}
 
-                <!-- User Badge & Logout -->
                 <div class="flex items-center gap-3 ml-4 pl-4 border-l border-gray-700/50">
-                    <!-- Tema Toggle -->
                     <button class="theme-toggle" id="themeToggleDesktop" title="Tema Değiştir">
                         <i class="fas fa-sun"></i>
                     </button>
-                    <!-- Bildirim Çanı -->
                     <a href="{% url 'smart_home:share_requests' %}" class="relative transition-colors"
                         style="color: var(--text-muted);" title="Paylaşım İstekleri">
                         <i class="fas fa-bell text-sm"></i>
@@ -597,7 +572,6 @@
                 </div>
             </div>
 
-            <!-- Mobile Toggle -->
             <div class="flex items-center gap-3 md:hidden">
                 <button class="theme-toggle" id="themeToggleMobile" title="Tema Değiştir">
                     <i class="fas fa-sun"></i>
@@ -610,7 +584,6 @@
         </div>
 
         {% if user.is_authenticated %}
-        <!-- Mobile Menu -->
         <div id="mobileMenu" class="mobile-menu md:hidden mt-4">
             <div class="flex flex-col gap-3 pb-4">
                 <a href="{% url 'smart_home:dashboard' %}" class="text-sm font-medium px-2 py-1.5 nav-link"><i
@@ -646,17 +619,14 @@
         {% endif %}
     </nav>
 
-    <!-- ═══════════ CONTENT ═══════════ -->
     <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ═══════════ FOOTER ═══════════ -->
     <footer class="text-center text-gray-600 text-xs py-8 border-t border-gray-800/50">
         <p>Sparkle Smart Home &copy; 2026 — Powered by Django</p>
     </footer>
 
-    <!-- Mobile Menu JS -->
     <script>
         const mobileBtn = document.getElementById('mobileMenuBtn');
         if (mobileBtn) {
@@ -666,7 +636,6 @@
         }
     </script>
 
-    <!-- Tema Toggle JS -->
     <script>
         (function () {
             const html = document.documentElement;
@@ -689,10 +658,8 @@
                 setTimeout(() => html.classList.remove('theme-transition'), 500);
             }
 
-            // İkonları başlat
             updateIcons();
 
-            // Tüm toggle butonlarına bağla
             document.querySelectorAll('.theme-toggle').forEach(btn => {
                 btn.addEventListener('click', toggleTheme);
             });

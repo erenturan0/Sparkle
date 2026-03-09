@@ -1,4 +1,3 @@
-/* ── Theme Toggle Button ── */
 #sparkle-theme-toggle {
     cursor: pointer;
     background: transparent;
@@ -23,7 +22,6 @@
     color: #1a202c;
 }
 
-/* ── Light Mode Navbar Fixes ── */
 [data-bs-theme="light"] .main-header.navbar {
     background-color: #ffffff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -48,9 +46,6 @@
     color: #4a5568;
 }
 
-/* ── Custom Sparkle Buttons ── */
-
-/* Primary Button (Purple Gradient) */
 .btn-sparkle-primary {
     background: linear-gradient(135deg, #6c5ce7, #5a4bd1);
     color: #ffffff;
@@ -68,7 +63,6 @@
     transform: translateY(-1px);
 }
 
-/* Success Button (Teal Gradient) */
 .btn-sparkle-success {
     background: linear-gradient(135deg, #00cec9, #00b894);
     color: #ffffff;
@@ -86,7 +80,6 @@
     transform: translateY(-1px);
 }
 
-/* Override default Bootstrap btn-info and btn-success globally in admin */
 .btn-info,
 .btn-success {
     background-color: #00cec9 !important;
@@ -110,7 +103,6 @@
     border-color: #5a4bd1 !important;
 }
 
-/* Outline Buttons (often used in Jazzmin list views) */
 .btn-outline-info,
 .btn-outline-success {
     color: #00cec9 !important;

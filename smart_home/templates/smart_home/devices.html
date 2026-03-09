@@ -3,7 +3,6 @@
 {% block content %}
 
 
-<!-- ── Sayfa Başlığı ── -->
 <div class="flex items-center justify-between mb-8">
     <div>
         <h1 class="text-3xl sm:text-4xl font-bold mb-2">
@@ -17,7 +16,6 @@
     </a>
 </div>
 
-<!-- ── Başarı Mesajı ── -->
 {% if messages %}
 {% for message in messages %}
 <div class="mb-6 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-sm flex items-center gap-2">
@@ -27,7 +25,6 @@
 {% endfor %}
 {% endif %}
 
-<!-- ── Cihaz Tablosu ── -->
 {% if devices %}
 <div class="device-card overflow-hidden !p-0">
     <div class="overflow-x-auto">

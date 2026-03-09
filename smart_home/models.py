@@ -3,7 +3,6 @@ from django.db import models
 
 
 class SmartDevice(models.Model):
-    """Tasmota firmware'li akıllı cihazları temsil eden model."""
 
     class DeviceType(models.TextChoices):
         SWITCH = "switch", "Anahtar / Röle"
@@ -21,15 +20,12 @@ class SmartDevice(models.Model):
         OFFICE = "ofis", "Çalışma Odası"
         OTHER = "diger", "Diğer"
 
-    # ── Sahip ───────────────────────────────────────────────
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Sahip",
         related_name="devices",
     )
-
-    # ── Temel Bilgiler ──────────────────────────────────────
     name = models.CharField(
         "Cihaz Adı",
         max_length=100,
@@ -52,8 +48,6 @@ class SmartDevice(models.Model):
         choices=DeviceType.choices,
         default=DeviceType.SWITCH,
     )
-
-    # ── Durum Bilgileri ─────────────────────────────────────
     is_active = models.BooleanField(
         "Aktif",
         default=True,
@@ -64,8 +58,6 @@ class SmartDevice(models.Model):
         null=True,
         blank=True,
     )
-
-    # ── Zaman Damgaları ─────────────────────────────────────
     created_at = models.DateTimeField("Oluşturulma", auto_now_add=True)
     updated_at = models.DateTimeField("Güncellenme", auto_now=True)
 
@@ -80,12 +72,10 @@ class SmartDevice(models.Model):
 
     @property
     def tasmota_base_url(self):
-        """Tasmota HTTP API temel URL'ini döndürür."""
         return f"http://{self.ip_address}/cm"
 
 
 class DeviceShareRequest(models.Model):
-    """Başka bir kullanıcının IP'sini kullanmak için onay isteği."""
 
     class Status(models.TextChoices):
         PENDING = "pending", "Bekliyor"

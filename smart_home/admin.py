@@ -5,7 +5,6 @@ from .models import SmartDevice, DeviceShareRequest
 
 @admin.register(SmartDevice)
 class SmartDeviceAdmin(admin.ModelAdmin):
-    """Admin panelinde cihaz yönetimi."""
 
     list_display = (
         "owner",
@@ -24,7 +23,6 @@ class SmartDeviceAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceShareRequest)
 class DeviceShareRequestAdmin(admin.ModelAdmin):
-    """Admin panelinde paylaşım istekleri yönetimi."""
 
     list_display = ("requester", "owner", "ip_address", "device_name", "status", "created_at")
     list_filter = ("status",)

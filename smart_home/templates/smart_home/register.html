@@ -4,9 +4,7 @@
 <div class="min-h-[75vh] flex items-center justify-center">
     <div class="w-full max-w-md">
 
-        <!-- ── Auth Card ── -->
         <div class="auth-card">
-            <!-- Logo & Başlık -->
             <div class="text-center mb-8">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-success mb-4 shadow-lg shadow-accent/20">
@@ -16,7 +14,6 @@
                 <p class="text-gray-500 text-sm">Sparkle akıllı ev sistemine katıl</p>
             </div>
 
-            <!-- Hata Mesajları -->
             {% if errors %}
             <div class="mb-6 space-y-2">
                 {% for err in errors %}
@@ -29,7 +26,6 @@
             </div>
             {% endif %}
 
-            <!-- Form -->
             <form method="post" class="space-y-5">
                 {% csrf_token %}
 
@@ -76,7 +72,6 @@
                 </button>
             </form>
 
-            <!-- Alt Link -->
             <div class="mt-8 text-center">
                 <p class="text-gray-500 text-sm">
                     Zaten hesabın var mı?

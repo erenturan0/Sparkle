@@ -2,7 +2,6 @@
 
 {% block content %}
 
-<!-- ── Sayfa Başlığı ── -->
 <div class="mb-8">
     <h1 class="text-3xl sm:text-4xl font-bold mb-2">
         <span class="bg-gradient-to-r from-accent-light to-success bg-clip-text text-transparent">Ayarlar</span>
@@ -10,7 +9,6 @@
     <p class="text-gray-500 text-sm">Profil bilgilerini ve uygulama ayarlarını yönet.</p>
 </div>
 
-<!-- Başarı Mesajı -->
 {% if messages %}
 {% for message in messages %}
 <div class="mb-6 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-sm flex items-center gap-2">
@@ -20,7 +18,6 @@
 {% endfor %}
 {% endif %}
 
-<!-- Hata Mesajları -->
 {% if errors %}
 <div class="mb-6 space-y-2">
     {% for err in errors %}
@@ -34,7 +31,6 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    <!-- ── Profil Bilgileri ── -->
     <div class="auth-card">
         <div class="flex items-center gap-3 mb-6">
             <div class="w-12 h-12 rounded-xl bg-accent/15 flex items-center justify-center">
@@ -73,7 +69,6 @@
         </form>
     </div>
 
-    <!-- ── Şifre Değiştir ── -->
     <div class="auth-card">
         <div class="flex items-center gap-3 mb-6">
             <div class="w-12 h-12 rounded-xl bg-yellow-500/15 flex items-center justify-center">
