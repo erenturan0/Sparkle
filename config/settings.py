@@ -32,7 +32,13 @@ SECRET_KEY = env('SECRET_KEY', default='unsafe-build-secret-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['*']  # LAN erişimi için
+ALLOWED_HOSTS = [
+    'www.sparkleblog.app',
+    'sparkleblog.app',
+    'sparkle-292533913305.europe-west1.run.app',
+    'localhost',
+    '127.0.0.1'
+]
 
 
 # Application definition
@@ -60,7 +66,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.run.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.run.app',
+    'https://sparkleblog.app',
+    'https://www.sparkleblog.app',
+]
 
 ROOT_URLCONF = 'config.urls'
 
