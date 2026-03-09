@@ -102,19 +102,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3'),
-}
-
-# Cloud SQL Unix socket bağlantısı (Cloud Run)
+# Cloud SQL Unix socket bağlantısı (Cloud Run) veya TCP bağlantısı (lokal)
 CLOUD_SQL_CONNECTION = env('CLOUD_SQL_CONNECTION', default='')
-if CLOUD_SQL_CONNECTION:
-    DATABASES['default']['HOST'] = f'/cloudsql/{CLOUD_SQL_CONNECTION}'
 
-# Postgres bağlantı timeout (saniye) — Cloud Run'da asılı kalmasını önler
-if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-    DATABASES['default'].setdefault('OPTIONS', {})
-    DATABASES['default']['OPTIONS']['connect_timeout'] = 5
+if CLOUD_SQL_CONNECTION:
+    # Cloud Run: Unix socket üzerinden Cloud SQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DB_NAME', default='postgres'),
+            'USER': env('DB_USER', default='postgres'),
+            'PASSWORD': env('DB_PASSWORD', default=''),
+            'HOST': f'/cloudsql/{CLOUD_SQL_CONNECTION}',
+        }
+    }
+else:
+    # Lokal: DATABASE_URL veya sqlite fallback
+    DATABASES = {
+        'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3'),
+    }
+    # Postgres bağlantı timeout
+    if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+        DATABASES['default'].setdefault('OPTIONS', {})
+        DATABASES['default']['OPTIONS']['connect_timeout'] = 5
 
 
 # Password validation
