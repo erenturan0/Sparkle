@@ -106,6 +106,16 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3'),
 }
 
+# Cloud SQL Unix socket bağlantısı (Cloud Run)
+CLOUD_SQL_CONNECTION = env('CLOUD_SQL_CONNECTION', default='')
+if CLOUD_SQL_CONNECTION:
+    DATABASES['default']['HOST'] = f'/cloudsql/{CLOUD_SQL_CONNECTION}'
+
+# Postgres bağlantı timeout (saniye) — Cloud Run'da asılı kalmasını önler
+if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+    DATABASES['default'].setdefault('OPTIONS', {})
+    DATABASES['default']['OPTIONS']['connect_timeout'] = 5
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
